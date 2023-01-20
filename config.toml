@@ -1,0 +1,15 @@
+baseurl = "http://www.example.com"
+title = "Daniel's Musings"
+theme = "m10c"
+languagecode = "en"
+defaultcontentlanguage = "en"
+
+paginate = 20
+
+pygmentscodefences = true
+pygmentscodefencesguesssyntax = true
+
+[params]
+  author = "Daniel Chia"
+  description = "Tech, Graphics, Robotics"
+  keywords = "blog,developer,personal"
