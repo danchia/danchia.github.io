@@ -1,7 +1,6 @@
 ---
 title: "Bevy Renderer Perf Deep Dive 1"
 date: 2023-01-18T01:21:25-08:00
-draft: true
 tags:
     - bevy
     - graphics
