@@ -1,4 +1,4 @@
-baseurl = "http://www.example.com"
+baseurl = "https://danchia.github.io"
 title = "Daniel's Musings"
 theme = "m10c"
 languagecode = "en"
@@ -13,3 +13,13 @@ pygmentscodefencesguesssyntax = true
   author = "Daniel Chia"
   description = "Tech, Graphics, Robotics"
   keywords = "blog,developer,personal"
+
+  [[params.social]]
+    icon = "github"
+    name = "Github"
+    url = "https://github.com/danchia"
+
+  [[params.social]]
+    icon = "twitter"
+    name = "Twitter"
+    url = "https://twitter.com/DanielChiaJH"
