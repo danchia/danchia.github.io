@@ -270,13 +270,13 @@ Let's look at `DrawMesh::render` first:
 960 |                          |                 }
 ```
 
-Oof, 58% (16% of opaque 3d `RenderPhase::render`) in `meshes.into_inner().get(mesh_handle)`, which is a `HashMap` lookup.
+Oof, 58% (16% of opaque 3d `RenderPhase<opaque_3d>::render`) in `meshes.into_inner().get(mesh_handle)`, which is a `HashMap` lookup.
 
 What about `wgpu::RenderPass::draw_indexed`? Let's take a look out of curiosity. Looking at the callgraph view again, it looks ~70% is spent in `RawVec<>::reserve_for_push` i.e. resizing the vector.
 
 ## Dropping `TrackedRenderPass`
 
-Earlier, we noted we spent 53% in `opaque_phase.render`, and 46% at the end in dropping `TrackedRenderPass`.
+Earlier, we noted we spent 53% in `RenderPhase<opaque_3d>::render`, and 46% at the end in dropping `TrackedRenderPass`.
 Let's look at what's up with `TrackedRenderPass` now, why is dropping it so expensive?
 
 Turns out, dropping the render pass also triggers ending the `wgpu` render pass. Digging in more:
@@ -324,7 +324,7 @@ We looked really closely at the opaque 3d render phase here, which is about 40% 
 
 Some takeaways:
 
-* The ECS entity lookups in the draw loop is really expensive! It's 23% of the opaque 3d RenderPhase.
-* The GPU mesh HashMap lookup is no slouch either, at 16% of the opaque 3d RenderPhase.
-* If we can get the wgpu render pass command encoder to re-use its command vector, we could maybe save on the 10% we're paying for resizing it.
-* Something like 60-70% of the opaque 3d cost is in wgpu code, so barring substantial improvements on the wgpu side, this code is somewhat unavoidable. We either have to reduce draw calls via batching and/or try and parallelize command buffer recording.
+* The ECS entity lookups in the draw loop (view + item)is really expensive! It is ~33% of the opaque 3d RenderPhase, 17.5% of the main_pass_3d_node.
+* The GPU mesh HashMap lookup is no slouch either, at 16% of the opaque 3d RenderPhase, ~8.5% of the main_pass_3d_node.
+* If we can get the wgpu render pass command encoder to re-use its command vector, we could maybe save on the 10% of the opaque 3d RenderPhase we're paying for resizing it.
+* Something like 60% of the main_pass_3d_node cost is in wgpu code, so barring substantial improvements on the wgpu side, this code is somewhat unavoidable. We either have to reduce draw calls via batching and/or try and parallelize command buffer recording.
